@@ -3,6 +3,7 @@ package br.edu.ifpe.oxefood.api.cliente;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -11,12 +12,22 @@ public class ClienteService {
     private final ClienteRepository repository;
 
     public ClienteService(ClienteRepository repository) {
-       this.repository = repository;
+        this.repository = repository;
     }
 
     public Cliente build(ClienteDTO dto) {
 
-        Cliente cliente = new Cliente();
+        Cliente cliente = null;
+
+        if (dto.getId() == null) { // Montado para o cadastro
+
+            cliente = new Cliente();
+
+        } else { // Consultado para a alteração
+
+            cliente = repository.findById(dto.getId()).get();
+        }
+
         cliente.setNome(dto.getNome());
         cliente.setDataNascimento(dto.getDataNascimento());
         cliente.setCpf(dto.getCpf());
@@ -31,17 +42,25 @@ public class ClienteService {
 
         Cliente cliente = build(dto);
         cliente.setHabilitado(true);
+
         return repository.save(cliente);
     }
 
     public List<Cliente> listar() {
 
-        return repository.findAll(); //SELECT * FROM Cliente
+        return repository.findAll();
     }
 
     public Cliente buscarPorId(Long id) {
 
-        return repository.findById(id).get();   //SELECT * FROM Cliente WHERE id = ?
+        return repository.findById(id).get();
     }
 
+    @Transactional
+    public Cliente atualizar(ClienteDTO dto) {
+
+        Cliente cliente = build(dto);
+
+        return repository.save(cliente);
+    }
 }
