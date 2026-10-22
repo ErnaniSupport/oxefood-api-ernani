@@ -3,6 +3,8 @@ package br.edu.ifpe.oxefood.api.produto;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import br.edu.ifpe.oxefood.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -10,15 +12,28 @@ public class ProdutoService {
 
     private final ProdutoRepository repository;
 
-    public ProdutoService(ProdutoRepository repository) {
+    private final CategoriaProdutoRepository categoriaProdutoRepository;
+
+   public ProdutoService(ProdutoRepository repository, CategoriaProdutoRepository categoriaProdutoRepository) {
+        
         this.repository = repository;
+        this.categoriaProdutoRepository = categoriaProdutoRepository;
     }
 
     public Produto build(ProdutoDTO dto) {
 
-        Produto produto = new Produto();
+        Produto produto = null;
 
-        produto.setIdCategoria(dto.getIdCategoria());
+        if (dto.getId() == null) { //Montado para o cadastro
+
+            produto = new Produto();
+
+        } else { //Consultado para a alteração
+
+            produto = repository.findById(dto.getId()).get();
+        }
+
+        produto.setCategoria(categoriaProdutoRepository.findById(dto.getIdCategoria()).get());
         produto.setCodigo(dto.getCodigo());
         produto.setTitulo(dto.getTitulo());
         produto.setDescricao(dto.getDescricao());
@@ -29,22 +44,43 @@ public class ProdutoService {
         return produto;
     }
 
-    @Transactional
+   @Transactional
     public Produto cadastrar(ProdutoDTO dto) {
 
         Produto produto = build(dto);
+
+        if (produto.getValorUnitario() < 10) {
+            throw new ProdutoException(ProdutoException.MSG_VALOR_MINIMO_PRODUTO);
+        }
+
         produto.setHabilitado(true);
         return repository.save(produto);
     }
 
     public List<Produto> listar() {
 
-        return repository.findAll(); //SELECT * FROM Produto
+        return repository.findAll();
     }
 
-    public Produto buscarPorId(Long id) {
+     public Produto buscarPorId(Long id) {
 
-        return repository.findById(id).get(); //SELECT * FROM Produto WHERE id = ?
+        return repository.findById(id).get();
+    }
+
+    @Transactional
+    public Produto atualizar(ProdutoDTO dto) {
+
+        Produto produto = build(dto);
+	    return repository.save(produto);
+    }
+
+    @Transactional
+    public void remover(Long id) {
+
+        Produto produto = repository.findById(id).get();
+        produto.setHabilitado(false);
+
+        repository.save(produto);
     }
 }
 

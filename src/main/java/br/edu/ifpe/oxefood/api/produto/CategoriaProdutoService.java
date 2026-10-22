@@ -15,9 +15,18 @@ public class CategoriaProdutoService {
         this.repository = repository;
     }
 
-    public CategoriaProduto build(CategoriaDTO dto) {
+    public CategoriaProduto build(CategoriaProdutoDTO dto) {
 
-        CategoriaProduto categoria = new CategoriaProduto();
+        CategoriaProduto categoria = null;
+
+        if (dto.getId() == null) { //Montado para o cadastro
+
+            categoria = new CategoriaProduto();
+
+        } else { //Consultado para a alteração
+
+            categoria = repository.findById(dto.getId()).get();
+        }
 
         categoria.setDescricao(dto.getDescricao());
 
@@ -25,12 +34,10 @@ public class CategoriaProdutoService {
     }
 
     @Transactional
-    public CategoriaProduto cadastrar(CategoriaDTO dto) {
+    public CategoriaProduto cadastrar(CategoriaProdutoDTO dto) {
 
         CategoriaProduto categoria = build(dto);
-
         categoria.setHabilitado(true);
-
         return repository.save(categoria);
     }
 
@@ -42,6 +49,22 @@ public class CategoriaProdutoService {
     public CategoriaProduto buscarPorId(Long id) {
 
         return repository.findById(id).get();
+    }
+
+    @Transactional
+    public CategoriaProduto atualizar(CategoriaProdutoDTO dto) {
+
+        CategoriaProduto categoria = build(dto);
+	    return repository.save(categoria);
+    }
+
+    @Transactional
+    public void remover(Long id) {
+
+        CategoriaProduto categoria = repository.findById(id).get();
+        categoria.setHabilitado(false);
+
+        repository.save(categoria);
     }
 
 }

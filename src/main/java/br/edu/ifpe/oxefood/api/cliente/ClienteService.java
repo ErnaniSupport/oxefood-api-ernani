@@ -19,11 +19,11 @@ public class ClienteService {
 
         Cliente cliente = null;
 
-        if (dto.getId() == null) { // Montado para o cadastro
+        if (dto.getId() == null) { //Montado para o cadastro
 
             cliente = new Cliente();
 
-        } else { // Consultado para a alteração
+        } else { //Consultado para a alteração
 
             cliente = repository.findById(dto.getId()).get();
         }
@@ -42,25 +42,33 @@ public class ClienteService {
 
         Cliente cliente = build(dto);
         cliente.setHabilitado(true);
-
-        return repository.save(cliente);
-    }
-
-    public List<Cliente> listar() {
-
-        return repository.findAll();
-    }
-
-    public Cliente buscarPorId(Long id) {
-
-        return repository.findById(id).get();
+        return repository.save(cliente); //insert into ...
     }
 
     @Transactional
     public Cliente atualizar(ClienteDTO dto) {
 
         Cliente cliente = build(dto);
-
-        return repository.save(cliente);
+        return repository.save(cliente); //update ...
     }
+
+    public List<Cliente> listar() {
+
+        return repository.findAll(); // SELECT * FROM Cliente
+    }
+
+    public Cliente buscarPorId(Long id) {
+
+        return repository.findById(id).get(); // SELECT * FROM Cliente WHERE id = ?
+    }
+
+    @Transactional
+    public void remover(Long id) {
+
+        Cliente cliente = repository.findById(id).get();
+        cliente.setHabilitado(false);
+
+        repository.save(cliente); 
+    }
+
 }

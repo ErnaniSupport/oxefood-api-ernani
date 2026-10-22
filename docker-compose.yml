@@ -9,6 +9,6 @@ services:
      POSTGRES_PASSWORD: oxefood
      POSTGRES_DB: oxefood-db
    ports:
-     - "5433:5432"
+     - "5450:5432"
    volumes:
      - ./postgres-data:/bitnami/postgresql/data
