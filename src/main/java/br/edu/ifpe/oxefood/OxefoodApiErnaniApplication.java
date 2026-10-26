@@ -12,5 +12,5 @@ public class OxefoodApiErnaniApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(OxefoodApiErnaniApplication.class, args);
 	}
-
+	
 }

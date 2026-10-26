@@ -9,12 +9,12 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ProdutoService {
-
+ 
     private final ProdutoRepository repository;
 
     private final CategoriaProdutoRepository categoriaProdutoRepository;
 
-   public ProdutoService(ProdutoRepository repository, CategoriaProdutoRepository categoriaProdutoRepository) {
+    public ProdutoService(ProdutoRepository repository, CategoriaProdutoRepository categoriaProdutoRepository) {
         
         this.repository = repository;
         this.categoriaProdutoRepository = categoriaProdutoRepository;
@@ -44,7 +44,7 @@ public class ProdutoService {
         return produto;
     }
 
-   @Transactional
+    @Transactional
     public Produto cadastrar(ProdutoDTO dto) {
 
         Produto produto = build(dto);
@@ -62,7 +62,7 @@ public class ProdutoService {
         return repository.findAll();
     }
 
-     public Produto buscarPorId(Long id) {
+    public Produto buscarPorId(Long id) {
 
         return repository.findById(id).get();
     }
@@ -83,4 +83,3 @@ public class ProdutoService {
         repository.save(produto);
     }
 }
-

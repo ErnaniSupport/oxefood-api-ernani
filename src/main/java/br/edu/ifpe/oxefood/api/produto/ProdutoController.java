@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/produto")
 public class ProdutoController {
-
+ 
     private final ProdutoService produtoService;
 
     public ProdutoController(ProdutoService service) {
+        
         this.produtoService = service;
     }
 
@@ -27,10 +28,7 @@ public class ProdutoController {
     public ResponseEntity<Produto> cadastrar(@RequestBody ProdutoDTO dto) {
 
         Produto produtoCadastrado = produtoService.cadastrar(dto);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(produtoCadastrado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoCadastrado);
     }
 
     @GetMapping
@@ -58,6 +56,5 @@ public class ProdutoController {
         produtoService.remover(id);
         return ResponseEntity.noContent().build();
     }
-
+    
 }
-

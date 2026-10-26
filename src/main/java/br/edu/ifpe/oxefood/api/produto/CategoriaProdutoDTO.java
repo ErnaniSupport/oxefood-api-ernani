@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoriaProdutoDTO {
+
     private Long id;
-    
+ 
     private String descricao;
+
 }

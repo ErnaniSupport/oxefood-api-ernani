@@ -8,10 +8,11 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class CategoriaProdutoService {
-
+    
     private final CategoriaProdutoRepository repository;
 
     public CategoriaProdutoService(CategoriaProdutoRepository repository) {
+        
         this.repository = repository;
     }
 
@@ -68,4 +69,3 @@ public class CategoriaProdutoService {
     }
 
 }
-
